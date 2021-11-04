@@ -4,65 +4,27 @@ package cliUPC
 import (
 	"bytes"
 	"fmt"
-	"golang_ninja/clientUPCdb/config"
-	"golang_ninja/clientUPCdb/console"
+	"golang_ninja/clientUPCdb/package/config"
+	"golang_ninja/clientUPCdb/package/console"
+	"golang_ninja/clientUPCdb/package/dataEntry"
+	"golang_ninja/clientUPCdb/package/sendRequest"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 )
 
 // Saving function implements POST requests to the site with apikey
-func Saving() []byte {
-	fmt.Println("enter data")
+func Saving() string {
 	fmt.Println("enter UPC code")
 	upcCode := console.InputDateFromConsole()
 
-	dataUPC := enterData()
+	dataUPC := dataEntry.EnterData()
 
 	mp, body := createMultipartData(dataUPC)
 
 	req := createRequest(mp, body, upcCode)
 
-	cli := http.Client{}
-	resp, err := cli.Do(req)
-	defer func() {
-		if err = resp.Body.Close(); err != nil {
-			fmt.Println("error close Body", err)
-		}
-	}()
-
-	answer, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return answer
-}
-
-// enterData function implements input from console
-func enterData() map[string]string {
-	dataUPC := make(map[string]string)
-
-	fmt.Println("enter title")
-	dataUPC["title"] = console.InputDateFromConsole()
-
-	fmt.Println("enter alias")
-	dataUPC["alias"] = console.InputDateFromConsole()
-
-	fmt.Println("enter description")
-	dataUPC["description"] = console.InputDateFromConsole()
-
-	fmt.Println("enter manufacturer")
-	dataUPC["manufacturer"] = console.InputDateFromConsole()
-
-	fmt.Println("enter msrp")
-	dataUPC["msrp"] = console.InputDateFromConsole()
-
-	fmt.Println("enter category")
-	dataUPC["category"] = console.InputDateFromConsole()
-
-	return dataUPC
+	return sendRequest.SendRequest(req)
 }
 
 func createMultipartData(dataUPC map[string]string) (*multipart.Writer, io.ReadWriter) {

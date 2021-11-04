@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"golang_ninja/clientUPCdb/cliUPC"
-	"golang_ninja/clientUPCdb/config"
-	"golang_ninja/clientUPCdb/console"
+	"golang_ninja/clientUPCdb/package/cliUPC"
+	"golang_ninja/clientUPCdb/package/config"
+	"golang_ninja/clientUPCdb/package/console"
 	"log"
 )
 
@@ -23,10 +23,10 @@ func main() {
 		switch task {
 		case "1":
 			res := cliUPC.Saving()
-			fmt.Println(string(res))
+			fmt.Println(res)
 		case "2":
 			res := cliUPC.Get()
-			fmt.Println(string(res))
+			fmt.Println(res)
 		case "q", "Q":
 			fmt.Println("End program")
 			return
